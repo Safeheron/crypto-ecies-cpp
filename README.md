@@ -15,8 +15,8 @@ ECIES is a public-key authenticated encryption scheme, which uses a KDF (key-der
 Linux and Mac are supported now.  After obtaining the Source, have a look at the installation script.
 
 ```shell
-git clone https://github.com/safeheron/crypto-sss-cpp.git
-cd crypto-sss-cpp
+git clone https://github.com/safeheron/crypto-encrypt-cpp.git
+cd crypto-encrypt-cpp
 mkdir build && cd build
 # Run "cmake .. -DOPENSSL_ROOT_DIR=Your-Root-Directory-of-OPENSSL" instead of the command below on Mac OS.
 cmake ..
@@ -30,13 +30,13 @@ sudo make install
 More platforms such as Windows would be supported soon.
 
 
-# To start using crypto-sss-cpp
+# To start using crypto-encrypt-cpp
 
 ## CMake
 
 CMake is your best option. It supports building on Linux, MacOS and Windows (soon) but also has a good chance of working on other platforms (no promises!). cmake has good support for crosscompiling and can be used for targeting the Android platform.
 
-To build crypto-sss-cpp from source, follow the BUILDING guide.
+To build crypto-encrypt-cpp from source, follow the BUILDING guide.
 
 The canonical way to discover dependencies in CMake is the find_package command.
 
@@ -50,16 +50,16 @@ find_package(PkgConfig REQUIRED)
 pkg_search_module(PROTOBUF REQUIRED protobuf)  # this looks for *.pc file
 #set(OPENSSL_USE_STATIC_LIBS TRUE)
 find_package(OpenSSL REQUIRED)
-find_package(CryptoSSS REQUIRED)
+find_package(CryptoEncrypt REQUIRED)
 
 add_executable(${PROJECT_NAME} XXXX.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC
-        ${CryptoSSS_INCLUDE_DIRS}
+        ${CryptoEncrypt_INCLUDE_DIRS}
         ${PROTOBUF_INCLUDE_DIRS}
         )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
-        CryptoSSS
+        CryptoEncrypt
         OpenSSL::Crypto
         ${PROTOBUF_LINK_LIBRARIES}
         pthread )
@@ -70,14 +70,14 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 ```c++
 #include "crypto-bn/bn.h"
 #include "crypto-curve/curve.h"
-#include "crypto-sss/vsss_secp256k1.h"
+#include "crypto-encrypt/vencrypt_secp256k1.h"
 
 using safeheron::bignum::BN;
 using safeheron::curve::Curve;
 using safeheron::curve::CurveType;
 using safeheron::curve::CurvePoint;
-using safeheron::sss::Point;
-using safeheron::sss::Polynomial;
+using safeheron::encrypt::Point;
+using safeheron::encrypt::Polynomial;
 using std::vector;
 
 int main(){
