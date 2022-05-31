@@ -1,11 +1,11 @@
 include(CMakeFindDependencyMacro)
-@CryptoEncrypt_FIND_DEPENDENCY_CALLS@
+@CryptoECIES_FIND_DEPENDENCY_CALLS@
 include("${CMAKE_CURRENT_LIST_DIR}/@exported_targets_filename@")
 
 @PACKAGE_INIT@
-set_and_check(CryptoEncrypt_INCLUDE_DIR  "${CMAKE_INSTALL_PREFIX}/include/safeheron")
-set_and_check(CryptoEncrypt_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include/safeheron")
-set_and_check(CryptoEncrypt_LIBRARY_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+set_and_check(CryptoECIES_INCLUDE_DIR  "${CMAKE_INSTALL_PREFIX}/include/safeheron")
+set_and_check(CryptoECIES_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include/safeheron")
+set_and_check(CryptoECIES_LIBRARY_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 
 
 MESSAGE(STATUS "###################################")
@@ -13,13 +13,13 @@ MESSAGE(STATUS "operation system is ${CMAKE_SYSTEM}")
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     MESSAGE(STATUS "current platform: Darwin ")
-    set_and_check(CryptoEncrypt_LIBRARY "${CMAKE_INSTALL_PREFIX}/lib/libCryptoEncrypt.dylib")
+    set_and_check(CryptoECIES_LIBRARY "${CMAKE_INSTALL_PREFIX}/lib/libCryptoECIES.dylib")
 ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     MESSAGE(STATUS "current platform: Windows")
-    set_and_check(CryptoEncrypt_LIBRARY "${CMAKE_INSTALL_PREFIX}/lib/libCryptoEncrypt.dll")
+    set_and_check(CryptoECIES_LIBRARY "${CMAKE_INSTALL_PREFIX}/lib/libCryptoECIES.dll")
 ELSE ()
     MESSAGE(STATUS "other platform: ${CMAKE_SYSTEM_NAME}")
-    set_and_check(CryptoEncrypt_LIBRARY "${CMAKE_INSTALL_PREFIX}/lib/libCryptoEncrypt.so")
+    set_and_check(CryptoECIES_LIBRARY "${CMAKE_INSTALL_PREFIX}/lib/libCryptoECIES.so")
 ENDIF (CMAKE_SYSTEM_NAME MATCHES "Darwin")
 
 MESSAGE(STATUS "###################################")

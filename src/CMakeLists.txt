@@ -3,30 +3,49 @@ pkg_search_module(PROTOBUF REQUIRED protobuf)  # depend on pkg-config, this look
 
 #set(OPENSSL_USE_STATIC_LIBS TRUE)
 find_package(OpenSSL REQUIRED)
-find_package(CryptoBN REQUIRED)
-find_package(CryptoEncode REQUIRED)
-find_package(CryptoHash REQUIRED)
-find_package(CryptoCurve REQUIRED)
 
-add_library(${PROJECT_NAME} SHARED
-        crypto-encrypt/auth_enc.cpp
-        crypto-encrypt/ecies.cpp
+message("CMAKE_PROJECT_NAME= ${CMAKE_PROJECT_NAME}")
+target_sources(${CMAKE_PROJECT_NAME} PRIVATE
+        crypto-ecies/auth_enc.cpp
+        crypto-ecies/ecies.cpp
+        crypto-ecies/hmac.cpp
+        crypto-ecies/kdf.cpp
+        crypto-ecies/symm.cpp
         )
 
-target_include_directories(${PROJECT_NAME} PUBLIC
-        ${CryptoBN_INCLUDE_DIRS}
-        ${CryptoEncode_INCLUDE_DIRS}
-        ${CryptoHash_INCLUDE_DIRS}
-        ${CryptoCurve_INCLUDE_DIRS}
-        ${PROTOBUF_INCLUDE_DIRS}
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
         ${OPENSSL_INCLUDE_DIR}
+        ${PROTOBUF_INCLUDE_DIRS}
+        /usr/local/include  # This directory is included default on linux but not on Mac os
         )
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${PROTOBUF_LIBRARIES}
-        CryptoBN
-        CryptoEncode
-        CryptoHash
-        CryptoCurve
+# This directory is included default on linux but not on Mac os
+target_link_directories(${PROJECT_NAME} PUBLIC /usr/local/lib)
+target_link_libraries(${CMAKE_PROJECT_NAME}
+        ${PROTOBUF_LIBRARIES}
         OpenSSL::Crypto
         -ldl
         )
+
+# Refer to single internal library only if it's not assembled into a big library.
+option(ENABLE_ASSEMBLE "Enable assemble" OFF)
+if (NOT ${ENABLE_ASSEMBLE})
+    find_package(CryptoBN REQUIRED)
+    find_package(CryptoHash REQUIRED)
+    find_package(CryptoEncode REQUIRED)
+    find_package(CryptoCurve REQUIRED)
+
+    target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC
+            ${CryptoBN_INCLUDE_DIRS}
+            ${CryptoHash_INCLUDE_DIRS}
+            ${CryptoEncode_INCLUDE_DIRS}
+            ${CryptoCurve_INCLUDE_DIRS}
+            )
+
+    target_link_libraries(${CMAKE_PROJECT_NAME}
+            CryptoBN
+            CryptoHash
+            CryptoEncode
+            CryptoCurve
+            )
+endif()

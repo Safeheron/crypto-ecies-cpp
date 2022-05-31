@@ -1,16 +1,34 @@
 find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS})
-
 find_package(PkgConfig REQUIRED)
 pkg_search_module(PROTOBUF REQUIRED protobuf)  # this looks for opencv.pc file
 
-include_directories("../src")
+include_directories(
+        ${GTEST_INCLUDE_DIRS}
+        ../src
+        /usr/local/include  # This directory is included default on linux but not on Mac os
+)
 
-add_executable(curve-enc-test curve-enc-test.cpp)
-target_link_libraries(sss-test
-        CryptoSSS
-        ${GTEST_BOTH_LIBRARIES}
-        pthread )
-add_test(NAME curve-enc-test COMMAND curve-enc-test)
+option(ENABLE_ASSEMBLE "Enable assemble" OFF)
+if (NOT ${ENABLE_ASSEMBLE})
+    # This directory is included default on linux but not on Mac os
+    link_directories(/usr/local/lib)
+    link_libraries(CryptoECIES
+            ${PROTOBUF_LIBRARIES}
+            ${GTEST_BOTH_LIBRARIES}
+            pthread )
+else()
+    link_libraries(${CMAKE_PROJECT_NAME}
+            ${PROTOBUF_LIBRARIES}
+            ${GTEST_BOTH_LIBRARIES}
+            pthread )
+endif()
 
 
+add_executable(auth-enc-test auth-enc-test.cpp)
+add_test(NAME auth-enc-test COMMAND auth-enc-test)
+
+add_executable(ecies-test ecies-test.cpp)
+add_test(NAME ecies-test COMMAND ecies-test)
+
+add_executable(curve-param-test curve-param-test.cpp)
+add_test(NAME curve-param-test COMMAND curve-param-test)
