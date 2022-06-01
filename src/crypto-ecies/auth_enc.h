@@ -10,14 +10,14 @@
 #ifndef SAFEHERON_CRYPTO_AUTH_ENC_H
 #define SAFEHERON_CRYPTO_AUTH_ENC_H
 
-#include <crypto-bn/bn.h>
-#include <crypto-curve/curve_point.h>
+#include "crypto-bn/bn.h"
+#include "crypto-curve/curve_point.h"
 
 using namespace safeheron::bignum;
 using namespace safeheron::curve;
 
-namespace curve {
-namespace enc {
+namespace safeheron {
+namespace ecies {
 
 class AuthEnc{
 private:

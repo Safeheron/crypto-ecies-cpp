@@ -13,6 +13,9 @@
 
 #define KDF_MAX_LEN    (1 << 30)
 
+namespace safeheron {
+namespace ecies {
+
 /**
  * @brief Use a hash function to derivate data from input data
  * 
@@ -27,18 +30,17 @@
  * @return true 
  * @return false 
  */
-bool IKDF::baseKDF(int hash_nid, int iter_from, 
-                   const unsigned char* input, size_t in_size, 
-                   const unsigned char* salt, size_t salt_size,
-                   size_t out_size, std::string & out) 
-{
+bool IKDF::baseKDF(int hash_nid, int iter_from,
+                   const unsigned char *input, size_t in_size,
+                   const unsigned char *salt, size_t salt_size,
+                   size_t out_size, std::string &out) {
     int mdlen = 0;
     int leftlen = 0;
     bool ret = false;
     unsigned char ctr[4] = {0};
     unsigned char buff[EVP_MAX_MD_SIZE] = {0};
-    EVP_MD_CTX* ctx = nullptr;
-    const EVP_MD* md = nullptr;
+    EVP_MD_CTX *ctx = nullptr;
+    const EVP_MD *md = nullptr;
 
     if (!input || in_size <= 0) {
         return false;
@@ -48,28 +50,27 @@ bool IKDF::baseKDF(int hash_nid, int iter_from,
     }
 
     // get md result size in bytes
-    switch (hash_nid)
-    {
-    case NID_sha1:
-        md = EVP_sha1(); 
-        break;
-    case NID_sha256:
-        md = EVP_sha256(); 
-        break;
-    case NID_sha384:
-        md = EVP_sha384(); 
-        break;
-    case NID_sha512:
-        md = EVP_sha512(); 
-        break;
-    default:
-        return false;
+    switch (hash_nid) {
+        case NID_sha1:
+            md = EVP_sha1();
+            break;
+        case NID_sha256:
+            md = EVP_sha256();
+            break;
+        case NID_sha384:
+            md = EVP_sha384();
+            break;
+        case NID_sha512:
+            md = EVP_sha512();
+            break;
+        default:
+            return false;
     }
     mdlen = EVP_MD_size(md);
 
     if (!(ctx = EVP_MD_CTX_new()))
         return false;
-    
+
     // loop until leftlen = 0
     leftlen = out_size;
     for (int i = iter_from;; i++) {
@@ -96,17 +97,16 @@ bool IKDF::baseKDF(int hash_nid, int iter_from,
 
         // append this md to out string
         if (leftlen > mdlen) {
-            out.append((const char*)buff, mdlen);
+            out.append((const char *) buff, mdlen);
             leftlen -= mdlen;
-        }
-        else {
-            out.append((const char*)buff, leftlen);
+        } else {
+            out.append((const char *) buff, leftlen);
             ret = true;
             break;
         }
     }
 
-err:
+    err:
     if (ctx) {
         EVP_MD_CTX_free(ctx);
         ctx = nullptr;
@@ -118,53 +118,55 @@ err:
 //  Key derivation function from X9.63/SECG 
 //  key = Hash(x||I2OSP(1, 4)||iv) || · · · ||Hash(x||I2OSP(k, 4)||iv))
 //    where k = out_size/Hash.len
-bool KDF_X9_63::generateBytes(const unsigned char* input, 
-                              size_t in_size, 
-                              size_t out_size, 
-                              std::string & out) 
-{
-    return IKDF::baseKDF(hash_nid_, 1, input, in_size, 
-                         (const unsigned char*)iv_.c_str(), 
+bool KDF_X9_63::generateBytes(const unsigned char *input,
+                              size_t in_size,
+                              size_t out_size,
+                              std::string &out) {
+    return IKDF::baseKDF(hash_nid_, 1, input, in_size,
+                         (const unsigned char *) iv_.c_str(),
                          iv_.length(), out_size, out);
 }
-bool KDF_X9_63::generateBytes(const std::string & input, 
-                              size_t out_size, 
-                              std::string & out) 
-{
-    return generateBytes((const unsigned char*)input.c_str(), 
-                          input.length(), out_size, out);
+
+bool KDF_X9_63::generateBytes(const std::string &input,
+                              size_t out_size,
+                              std::string &out) {
+    return generateBytes((const unsigned char *) input.c_str(),
+                         input.length(), out_size, out);
 }
 
 //  Key derivation function1 (KDF1) from 18033-2 
 //  key = Hash(x||I2OSP(0, 4)) || · · · ||Hash(x||I2OSP(k-1, 4)))
 //    where k = out_size/Hash.len
-bool KDF1_18033::generateBytes(const unsigned char* input, 
+bool KDF1_18033::generateBytes(const unsigned char *input,
                                size_t in_size,
                                size_t out_size,
-                               std::string & out) 
-{
+                               std::string &out) {
     return IKDF::baseKDF(hash_nid_, 0, input, in_size, nullptr, 0, out_size, out);
 }
-bool KDF1_18033::generateBytes(const std::string & input,
+
+bool KDF1_18033::generateBytes(const std::string &input,
                                size_t out_size,
-                               std::string & out) {
-    return generateBytes((const unsigned char*)input.c_str(), 
+                               std::string &out) {
+    return generateBytes((const unsigned char *) input.c_str(),
                          input.length(), out_size, out);
 }
 
 //  Key derivation function2 (KDF2) from 18033-2 
 //  key = Hash(x||I2OSP(1, 4)) || · · · ||Hash(x||I2OSP(k, 4)))
 //    where k = out_size/Hash.len
-bool KDF2_18033::generateBytes(const unsigned char* input,
+bool KDF2_18033::generateBytes(const unsigned char *input,
                                size_t in_size,
                                size_t out_size,
-                               std::string & out) 
-{
+                               std::string &out) {
     return IKDF::baseKDF(hash_nid_, 1, input, in_size, nullptr, 0, out_size, out);
 }
-bool KDF2_18033::generateBytes(const std::string & input,
+
+bool KDF2_18033::generateBytes(const std::string &input,
                                size_t out_size,
-                               std::string & out) {
-    return generateBytes((const unsigned char*)input.c_str(), 
+                               std::string &out) {
+    return generateBytes((const unsigned char *) input.c_str(),
                          input.length(), out_size, out);
+}
+
+}
 }

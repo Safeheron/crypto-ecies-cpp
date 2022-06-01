@@ -10,6 +10,18 @@ include_directories(
 
 option(ENABLE_ASSEMBLE "Enable assemble" OFF)
 if (NOT ${ENABLE_ASSEMBLE})
+    find_package(CryptoBN REQUIRED)
+    find_package(CryptoHash REQUIRED)
+    find_package(CryptoEncode REQUIRED)
+    find_package(CryptoCurve REQUIRED)
+
+    include_directories(
+            ${CryptoBN_INCLUDE_DIRS}
+            ${CryptoHash_INCLUDE_DIRS}
+            ${CryptoEncode_INCLUDE_DIRS}
+            ${CryptoCurve_INCLUDE_DIRS}
+    )
+
     # This directory is included default on linux but not on Mac os
     link_directories(/usr/local/lib)
     link_libraries(CryptoECIES

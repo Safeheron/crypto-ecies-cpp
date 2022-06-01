@@ -1,8 +1,5 @@
-//
-// Created by 何剑虹 on 2020/10/22.
-//
-#include "crypto-encrypt/ecies.h"
-#include "crypto-encrypt/auth_enc.h"
+#include "crypto-ecies/ecies.h"
+#include "crypto-ecies/auth_enc.h"
 #include <cstring>
 #include <google/protobuf/stubs/common.h>
 #include "gtest/gtest.h"
@@ -18,10 +15,8 @@ using namespace safeheron::encode;
 
 using safeheron::curve::CurvePoint;
 using safeheron::curve::CurveType;
-using curve::enc::ECIES;
-//using curve::enc::ECEncJS;
-using curve::enc::AuthEnc;
-//using curve::enc::AuthEncJS;
+using safeheron::ecies::ECIES;
+using safeheron::ecies::AuthEnc;
 
 const std::vector<std::string> message_arr = {
         {0, 1, 2, 3, 4, 5},
@@ -48,9 +43,9 @@ static void show_mem(const char * prefix, const char * buf, size_t len){
 
 void testCurveEncWithParams(const std::string &message,
                             CurveType c_type, 
-                            curve::enc::SYMM_ALG symm_alg,
-                            curve::enc::KDF_TYPE kdf_type,
-                            curve::enc::HMAC_ALG hmac_alg,
+                            safeheron::ecies::SYMM_ALG symm_alg,
+                            safeheron::ecies::KDF_TYPE kdf_type,
+                            safeheron::ecies::HMAC_ALG hmac_alg,
                             const std::string & derivation_iv,
                             const std::string & mac_iv)
 {
@@ -92,28 +87,28 @@ void testCurveEncWithParams(const std::string &message,
 
 TEST(Curve_ENC, ECIES_WithParams)
 {
-    const curve::enc::SYMM_ALG symm_algs[] = {curve::enc::SYMM_ALG::DESede_CBC,
-                                              curve::enc::SYMM_ALG::AES128_CBC,
-                                              curve::enc::SYMM_ALG::AES192_CBC,
-                                              curve::enc::SYMM_ALG::AES256_CBC
+    const safeheron::ecies::SYMM_ALG symm_algs[] = {safeheron::ecies::SYMM_ALG::DESede_CBC,
+                                              safeheron::ecies::SYMM_ALG::AES128_CBC,
+                                              safeheron::ecies::SYMM_ALG::AES192_CBC,
+                                              safeheron::ecies::SYMM_ALG::AES256_CBC
                                               };
-    const curve::enc::KDF_TYPE kdf_types[] = {curve::enc::KDF_TYPE::KDF_X9_63_With_SHA1,
-                                              curve::enc::KDF_TYPE::KDF_X9_63_With_SHA256,
-                                              curve::enc::KDF_TYPE::KDF_X9_63_With_SHA384,
-                                              curve::enc::KDF_TYPE::KDF_X9_63_With_SHA512,
-                                              curve::enc::KDF_TYPE::KDF1_18033_With_SHA1,
-                                              curve::enc::KDF_TYPE::KDF1_18033_With_SHA256,
-                                              curve::enc::KDF_TYPE::KDF1_18033_With_SHA384,
-                                              curve::enc::KDF_TYPE::KDF1_18033_With_SHA512,
-                                              curve::enc::KDF_TYPE::KDF2_18033_With_SHA1,
-                                              curve::enc::KDF_TYPE::KDF2_18033_With_SHA256,
-                                              curve::enc::KDF_TYPE::KDF2_18033_With_SHA384,
-                                              curve::enc::KDF_TYPE::KDF2_18033_With_SHA512
+    const safeheron::ecies::KDF_TYPE kdf_types[] = {safeheron::ecies::KDF_TYPE::KDF_X9_63_With_SHA1,
+                                              safeheron::ecies::KDF_TYPE::KDF_X9_63_With_SHA256,
+                                              safeheron::ecies::KDF_TYPE::KDF_X9_63_With_SHA384,
+                                              safeheron::ecies::KDF_TYPE::KDF_X9_63_With_SHA512,
+                                              safeheron::ecies::KDF_TYPE::KDF1_18033_With_SHA1,
+                                              safeheron::ecies::KDF_TYPE::KDF1_18033_With_SHA256,
+                                              safeheron::ecies::KDF_TYPE::KDF1_18033_With_SHA384,
+                                              safeheron::ecies::KDF_TYPE::KDF1_18033_With_SHA512,
+                                              safeheron::ecies::KDF_TYPE::KDF2_18033_With_SHA1,
+                                              safeheron::ecies::KDF_TYPE::KDF2_18033_With_SHA256,
+                                              safeheron::ecies::KDF_TYPE::KDF2_18033_With_SHA384,
+                                              safeheron::ecies::KDF_TYPE::KDF2_18033_With_SHA512
                                               };
-    const curve::enc::HMAC_ALG hmac_algs[] = {curve::enc::HMAC_ALG::HMAC_SHA1,
-                                              curve::enc::HMAC_ALG::HMAC_SHA256,
-                                              curve::enc::HMAC_ALG::HMAC_SHA384,
-                                              curve::enc::HMAC_ALG::HMAC_SHA512
+    const safeheron::ecies::HMAC_ALG hmac_algs[] = {safeheron::ecies::HMAC_ALG::HMAC_SHA1,
+                                              safeheron::ecies::HMAC_ALG::HMAC_SHA256,
+                                              safeheron::ecies::HMAC_ALG::HMAC_SHA384,
+                                              safeheron::ecies::HMAC_ALG::HMAC_SHA512
                                               };
     const std::string derivation_iv[] = {"", "11111111"};
     const std::string mac_iv[] = {"", "11111111"};

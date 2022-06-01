@@ -9,16 +9,17 @@
 
 #include "auth_enc.h"
 #include "ecies.h"
-#include <crypto-bn/bn.h>
-#include <safeheron/crypto-curve/curve.h>
-#include <safeheron/exception/safeheron_exceptions.h>
-#include <safeheron/crypto-hash/sha256.h>
+#include "crypto-bn/bn.h"
+#include "crypto-curve/curve.h"
+#include "exception/safeheron_exceptions.h"
+#include "crypto-hash/sha256.h"
+#include "crypto-encode/hex.h"
 
 using namespace safeheron::curve;
 using namespace safeheron::hash;
 
-namespace curve {
-namespace enc {
+namespace safeheron {
+namespace ecies {
 
 void AuthEnc::set_curve_type(CurveType curve_type) {
     curve_type_ = curve_type;
@@ -101,7 +102,11 @@ bool AuthEnc::Decrypt(const BN &local_priv, const CurvePoint &remote_pub,
 
     // Verify signature
     try {
-        ok = safeheron::curve::ecdsa::Verify(c_type, remote_pub, sig, digest);
+        std::string json;
+        remote_pub.ToJsonString(json);
+        std::cout << json << std::endl;
+        ok = safeheron::curve::ecdsa::Verify(c_type, remote_pub, digest, sig);
+        std::cout << "sig: " << safeheron::encode::hex::EncodeToHex(sig, 64) << std::endl;
         if (!ok) return false;
     }
     catch (safeheron::exception::LocatedException e) {

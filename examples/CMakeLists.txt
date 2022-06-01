@@ -10,22 +10,19 @@ find_package(PkgConfig REQUIRED)
 pkg_search_module(PROTOBUF REQUIRED protobuf)  # this looks for *.pc file
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 
-find_package(GTest REQUIRED)
 #set(OPENSSL_USE_STATIC_LIBS TRUE)
 find_package(OpenSSL REQUIRED)
-find_package(CryptoBN REQUIRED)
-find_package(CryptoSSS REQUIRED)
+find_package(CryptoECIES REQUIRED)
 
-add_executable(${PROJECT_NAME} example.cpp)
-target_include_directories(${PROJECT_NAME} PUBLIC
-        ${CryptoBN_INCLUDE_DIRS}
-        ${CryptoSSS_INCLUDE_DIRS}
+add_executable(example example.cpp)
+target_include_directories(example PUBLIC
         ${OPENSSL_INCLUDE_DIR}
-        ${GTEST_INCLUDE_DIRS}
+        ${CryptoECIES_INCLUDE_DIRS}
+        /usr/local/include
 )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC
-        CryptoBN
-        CryptoSSS
-        ${GTEST_BOTH_LIBRARIES}
+target_link_directories(example PUBLIC /usr/local/lib)
+target_link_libraries(example PUBLIC
+        CryptoECIES
+        OpenSSL::Crypto
         pthread )

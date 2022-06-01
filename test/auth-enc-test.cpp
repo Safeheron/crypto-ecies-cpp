@@ -1,8 +1,5 @@
-//
-// Created by 何剑虹 on 2020/10/22.
-//
-#include "crypto-encrypt/ecies.h"
-#include "crypto-encrypt/auth_enc.h"
+#include "crypto-ecies/ecies.h"
+#include "crypto-ecies/auth_enc.h"
 #include <cstring>
 #include <google/protobuf/stubs/common.h>
 #include "gtest/gtest.h"
@@ -18,10 +15,8 @@ using namespace safeheron::encode;
 
 using safeheron::curve::CurvePoint;
 using safeheron::curve::CurveType;
-using curve::enc::ECIES;
-//using curve::enc::ECEncJS;
-using curve::enc::AuthEnc;
-//using curve::enc::AuthEncJS;
+using safeheron::ecies::ECIES;
+using safeheron::ecies::AuthEnc;
 
 const std::vector<std::string> message_arr = {
         {0, 1, 2, 3, 4, 5},

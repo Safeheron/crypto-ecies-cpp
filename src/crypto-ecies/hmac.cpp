@@ -10,17 +10,18 @@
 #include "hmac.h"
 #include <openssl/hmac.h>
 
+namespace safeheron {
+namespace ecies {
 
-bool IHMAC::calcMAC(const unsigned char* key, 
+bool IHMAC::calcMAC(const unsigned char *key,
                     size_t key_size,
-                    const unsigned char* input, 
-                    size_t in_size, 
-                    std::string & out) 
-{
+                    const unsigned char *input,
+                    size_t in_size,
+                    std::string &out) {
     bool ret = false;
     unsigned int mdlen = 0;
     unsigned char md[EVP_MAX_MD_SIZE] = {0};
-    HMAC_CTX* ctx = nullptr;
+    HMAC_CTX *ctx = nullptr;
 
     if (!key || key_size <= 0) {
         return false;
@@ -39,20 +40,23 @@ bool IHMAC::calcMAC(const unsigned char* key,
         goto err;
     if (!HMAC_Final(ctx, md, &mdlen))
         goto err;
-    
-    out.assign((char*)md, mdlen);
+
+    out.assign((char *) md, mdlen);
     ret = true;
-err:
+    err:
     if (ctx) {
         HMAC_CTX_free(ctx);
         ctx = nullptr;
     }
     return ret;
 }
-bool IHMAC::calcMAC(const std::string & key,
-                    const std::string & input, 
-                    std::string & out) 
-{
-    return calcMAC((const unsigned char*)key.c_str(), key.length(),
-                   (const unsigned char*)input.c_str(), input.length(), out);
+
+bool IHMAC::calcMAC(const std::string &key,
+                    const std::string &input,
+                    std::string &out) {
+    return calcMAC((const unsigned char *) key.c_str(), key.length(),
+                   (const unsigned char *) input.c_str(), input.length(), out);
+}
+
+}
 }

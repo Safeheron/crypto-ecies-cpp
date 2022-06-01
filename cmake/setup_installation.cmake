@@ -47,4 +47,7 @@ install(
         DIRECTORY src/
         DESTINATION include/safeheron
         FILES_MATCHING PATTERN "*.h"
+        PATTERN "hmac.h" EXCLUDE
+        PATTERN "kdf.h" EXCLUDE
+        PATTERN "symm.h" EXCLUDE
 )
