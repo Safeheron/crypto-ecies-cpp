@@ -23,16 +23,11 @@ namespace ecies {
 ECIES::ECIES() {
     curve_type_ = CurveType::P256;
 
-    // in default
-    //hash_alg_ = HASHAlg::SHA512;
-    //symm_key_size_ = 256;
-    //mac_key_size_ = 128;
-
     // We use the following setting in default:
-    // KDF: KDF_X9_63_SHA512
-    // Symmetic: AES256_CBC
-    // MAC: HMAC_SHA512
-    kdf_ = new KDF_X9_63(NID_sha512);
+    // KDF: KDF2_18033 with SHA512
+    // Symmetic: AES256_CBC, key size: 256 bits
+    // MAC: HMAC_SHA512, key size: 1024 bits
+    kdf_ = new KDF2_18033(NID_sha512);
     symm_ = new AES(256);
     hmac_ = new HMAC_sha512();
     symm_alg_ = SYMM_ALG::AES256_CBC;
