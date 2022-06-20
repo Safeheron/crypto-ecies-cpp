@@ -36,9 +36,10 @@ public:
     virtual bool calcMAC(const std::string &key, const std::string &input, std::string &out);
 
 protected:
+    std::string getLengthTag(const std::string & str);
+
+protected:
     const EVP_MD *md_;
-    //size_t out_size_;
-    //size_t block_size_;
     std::string iv_;
 };
 
