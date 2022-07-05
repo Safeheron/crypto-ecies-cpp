@@ -15,6 +15,8 @@
 #include "crypto-bn/rand.h"
 #include "crypto-curve/curve.h"
 
+using namespace safeheron::bignum;
+using namespace safeheron::curve;
 using namespace safeheron;
 
 namespace safeheron {

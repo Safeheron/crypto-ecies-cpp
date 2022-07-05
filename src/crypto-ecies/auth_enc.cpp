@@ -15,6 +15,7 @@
 #include "crypto-hash/sha256.h"
 #include "crypto-encode/hex.h"
 
+using namespace safeheron::bignum;
 using namespace safeheron::curve;
 using namespace safeheron::hash;
 

@@ -9,6 +9,7 @@
 #include <crypto-encode/base64.h>
 #include <crypto-encode/hex.h>
 
+using namespace safeheron::bignum;
 using namespace safeheron::curve;
 using namespace safeheron::rand;
 using namespace safeheron::encode;

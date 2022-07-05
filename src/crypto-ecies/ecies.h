@@ -20,9 +20,6 @@
 #define MAX_HMAC_KEY_LEN    64  //in Bytes
 #define MAX_HMAC_LEN        64  //in Bytes
 
-using namespace safeheron::bignum;
-using namespace safeheron::curve;
-
 namespace safeheron {
 namespace ecies {
 
@@ -73,7 +70,7 @@ enum class HMAC_ALG : unsigned int {
 
 class ECIES {
 private:
-    CurveType curve_type_;
+    safeheron::curve::CurveType curve_type_;
     //
     IKDF *kdf_;
     ISYMM *symm_;
@@ -87,7 +84,7 @@ public:
 
     virtual ~ECIES();
 
-    void set_curve_type(CurveType curve_type);
+    void set_curve_type(safeheron::curve::CurveType curve_type);
 
     // Set symmetic algorithm using in ECIE
     // If this API is not called, we use AES256_CBC in default.
@@ -138,40 +135,39 @@ public:
 
     // Encrypt and decrypt
     // out_cypher is in format: 0x04|x|y|c|h
-    bool EncryptWithIV(const CurvePoint &pubkey, const std::string &in_plain, const std::string &in_iv,
+    bool EncryptWithIV(const safeheron::curve::CurvePoint &pubkey, const std::string &in_plain, const std::string &in_iv,
                        std::string &out_cypher);
 
-    bool Encrypt(const CurvePoint &pubkey, const std::string &in_plain, std::string &out_iv, std::string &out_cypher);
+    bool Encrypt(const safeheron::curve::CurvePoint &pubkey, const std::string &in_plain, std::string &out_iv, std::string &out_cypher);
 
-    bool Decrypt(const BN &privkey, const std::string &in_cypher, const std::string &in_iv, std::string &out_plain);
+    bool Decrypt(const safeheron::bignum::BN &privkey, const std::string &in_cypher, const std::string &in_iv, std::string &out_plain);
 
     //
-    bool EncryptWithIV(const CurvePoint &pubkey, const unsigned char *in_plain, size_t in_plain_len,
+    bool EncryptWithIV(const safeheron::curve::CurvePoint &pubkey, const unsigned char *in_plain, size_t in_plain_len,
                        const unsigned char *in_iv, size_t in_iv_len, std::string &out_cypher);
 
-    bool Encrypt(const CurvePoint &pubkey, const unsigned char *in_plain, size_t in_plain_len, std::string &out_iv,
+    bool Encrypt(const safeheron::curve::CurvePoint &pubkey, const unsigned char *in_plain, size_t in_plain_len, std::string &out_iv,
                  std::string &out_cypher);
 
-    bool Decrypt(const BN &privkey, const unsigned char *in_cypher, size_t in_cypher_len, const unsigned char *in_iv,
+    bool Decrypt(const safeheron::bignum::BN &privkey, const unsigned char *in_cypher, size_t in_cypher_len, const unsigned char *in_iv,
                  size_t in_iv_len, std::string &out_plain);
 
     // Encrypt pack and decrypt pack
     // out_cypher is in format: 0x04|x|y|c|h|iv, iv is 8 bytes for DESede, and 16 bytes for AES
-    bool EncryptPackWithIV(const CurvePoint &pubkey, const std::string &in_plain, const std::string &in_iv,
+    bool EncryptPackWithIV(const safeheron::curve::CurvePoint &pubkey, const std::string &in_plain, const std::string &in_iv,
                            std::string &out_cypher);
 
-    bool EncryptPack(const CurvePoint &pubkey, const std::string &in_plain, std::string &out_cypher);
+    bool EncryptPack(const safeheron::curve::CurvePoint &pubkey, const std::string &in_plain, std::string &out_cypher);
 
-    bool DecryptPack(const BN &privkey, const std::string &in_cypher, std::string &out_plain);
+    bool DecryptPack(const safeheron::bignum::BN &privkey, const std::string &in_cypher, std::string &out_plain);
 
     //
-    bool EncryptPackWithIV(const CurvePoint &pubkey, const unsigned char *in_plain, size_t in_plain_len,
+    bool EncryptPackWithIV(const safeheron::curve::CurvePoint &pubkey, const unsigned char *in_plain, size_t in_plain_len,
                            const unsigned char *in_iv, size_t in_iv_len, std::string &out_cypher);
 
-    bool
-    EncryptPack(const CurvePoint &pubkey, const unsigned char *in_plain, size_t in_plain_len, std::string &out_cypher);
+    bool EncryptPack(const safeheron::curve::CurvePoint &pubkey, const unsigned char *in_plain, size_t in_plain_len, std::string &out_cypher);
 
-    bool DecryptPack(const BN &privkey, const unsigned char *in_cypher, size_t in_cypher_len, std::string &out_plain);
+    bool DecryptPack(const safeheron::bignum::BN &privkey, const unsigned char *in_cypher, size_t in_cypher_len, std::string &out_plain);
 };
 
 }
