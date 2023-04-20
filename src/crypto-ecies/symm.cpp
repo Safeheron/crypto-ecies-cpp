@@ -24,7 +24,7 @@ bool ISYMM::encrypt(const unsigned char *in_plain,
     }
     out_cypher.clear();
 
-    out_len = in_plain_len + 8;
+    out_len = in_plain_len + EVP_MAX_BLOCK_LENGTH;
     out_buff = (unsigned char *) OPENSSL_malloc(out_len);
     memset(out_buff, 0, out_len);
 
@@ -40,7 +40,7 @@ bool ISYMM::encrypt(const unsigned char *in_plain,
         goto err;
     }
     out_cypher.append((char *) out_buff, out_len);
-    out_len = in_plain_len + 8;
+    out_len = in_plain_len + EVP_MAX_BLOCK_LENGTH;
     if (!EVP_CipherFinal_ex(ctx, out_buff, &out_len)) {
         goto err;
     }
